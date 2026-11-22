@@ -1,0 +1,27 @@
+{#- um campo do formulario de item; recebe col e e (item em edicao ou None) -#}
+{%- set v = valor_rec(e, col) if e else '' -%}
+<div class="campo">
+{%- if col.fixo == 'material' %}
+  {% set tipo_lista = 'rec_material' %}
+  <label>{{ col.rotulo }}: * {% include "recebimentos/_editar_lista.html" with context %}</label>
+  <input name="material" required value="{{ v }}" list="mats" {{ 'autofocus' if not e }}>
+  <datalist id="mats">{% for o in opcoes_rec('rec_material') %}<option>{{ o }}</option>{% endfor %}</datalist>
+{%- elif col.fixo == 'tipo' %}
+  {% set tipo_lista = 'rec_marca' %}
+  <label>{{ col.rotulo }}: {% include "recebimentos/_editar_lista.html" with context %}</label>
+  <input name="tipo" value="{{ v }}" list="marcas">
+  <datalist id="marcas">{% for o in opcoes_rec('rec_marca') %}<option>{{ o }}</option>{% endfor %}</datalist>
+{%- elif col.fixo == 'qtd' %}
+  <label>{{ col.rotulo }}:</label>
+  <input type="number" min="0" name="qtd" value="{{ v if e else 1 }}">
+{%- elif col.fixo == 'situacao' %}
+  <label>{{ col.rotulo }}:</label>
+  <select name="situacao">{% for s in SITUACOES %}<option {{ 'selected' if v == s }}>{{ s }}</option>{% endfor %}</select>
+{%- elif col.fixo == 'destino' %}
+  <label>{{ col.rotulo }}:</label>
+  <input name="destino" value="{{ v }}" placeholder="Setor / seção">
+{%- else %}
+  <label>{{ col.rotulo }}:</label>
+  <input name="{{ col.chave_form }}" value="{{ v }}">
+{%- endif %}
+</div>
